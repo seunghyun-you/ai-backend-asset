@@ -1,0 +1,27 @@
+{
+    "FULL_SET": {
+        "llm": "Claude V3.5 Sonnet",
+        "message": "안녕",
+        "message_id": "test",
+        "session_id": "fb6ed271-e88a-4cd8-93af-bfdc590bd010",
+        "connection_id": "test",
+        "conversation_type": "test",
+        "knowledge_type": "basic",
+        "multi_turn": {
+            "brand_name": "string",
+            "model_name": "string",
+            "error_code": "string",
+            "input_query": "string",
+            "parts_name": "string"
+        }
+    },
+    "SIMPLE_SET": {
+        "llm": "Claude V3.5 Sonnet",
+        "message": "안녕",
+        "message_id": "test",
+        "session_id": "fb6ed271-e88a-4cd8-93af-bfdc590bd010",
+        "connection_id": "test",
+        "conversation_type": "test",
+        "knowledge_type": "basic"
+    }
+}
