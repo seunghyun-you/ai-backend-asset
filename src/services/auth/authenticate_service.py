@@ -21,15 +21,15 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 # 가상의 사용자 데이터베이스 (실제로는 데이터베이스에 저장해야 함)
 poc_users_db = {
-    "test": {
-        "username": "SAMSUNGSDS",
-        "email": "test@samsung.com",
-        "hashed_password": '$2b$12$b35055Shd7Z0kkglS0JD8u/SjOWQQO/B1f3GsJXln0ojOK/sTxEBC'
+    "sh1517": {
+        "username": "Seunghyun.You",
+        "email": "sh1517.you@gmail.com",
+        "hashed_password": '$2b$12$jHgKE/.zfC2OomLjm27.d.V72FD0rJxhBQnqMDBTDaZef.8AVsrMe'
     },
-    "ajpoc": {
-        "username": "AJ Network",
-        "email": "AJ@samsung.com",
-        "hashed_password": '$2b$12$hpFc9/f36Oh/FxlxYgkSTOLvHxGcL0RKYXwM6kb/ZuxoUub5G1Awq'
+    "sh1517.you": {
+        "username": "Seunghyun.You",
+        "email": "sh1517.you@samsung.com",
+        "hashed_password": '$2b$12$jHgKE/.zfC2OomLjm27.d.V72FD0rJxhBQnqMDBTDaZef.8AVsrMe'
     }
 }
 
