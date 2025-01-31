@@ -23,7 +23,7 @@ class BedrockService:
         chunks = (chain.with_config(
                         configurable={
                             "llm": chat_requests.llm,
-                            "prompt": chat_requests.knowledge_type,
+                            # "prompt": chat_requests.knowledge_type,
                             "session_id": chat_requests.session_id,
                         }
                     ).stream(chat_requests.message))
