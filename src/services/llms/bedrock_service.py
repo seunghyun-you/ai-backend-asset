@@ -8,22 +8,12 @@ class BedrockService:
     def __init__(self):
         self.chain_manager = ChainManager()
     
-    def chat_simple(self, chat_requests: ChatRequest):
-        chain = self.chain_manager.get_chain(chat_requests.conversation_type)
-        chunks = (chain.with_config(
-                        configurable={
-                            "llm": chat_requests.llm,
-                            "prompt": chat_requests.knowledge_type,
-                        }
-                    ).invoke(chat_requests.message))
-        return chunks['answer']
-    
     def chat_stream(self, chat_requests: ChatRequest):
         chain = self.chain_manager.get_chain(chat_requests.conversation_type)
         chunks = (chain.with_config(
                         configurable={
                             "llm": chat_requests.llm,
-                            # "prompt": chat_requests.knowledge_type,
+                            "prompt": chat_requests.conversation_type,
                             "session_id": chat_requests.session_id,
                         }
                     ).stream(chat_requests.message))
@@ -33,14 +23,20 @@ class BedrockService:
                 yield chunk['answer']
             else:
                 pass
-
-    # def multi_turn(self, chat_requests: ChatRequest):
-    #     chain = self.chain_manager.get_chain(chat_requests.conversation_type)
-    #     chunks = (chain.with_config(
-    #                     configurable={
-    #                         "llm": chat_requests.llm,
-    #                         "prompt": chat_requests.knowledge_type,
-    #                         "session_id": chat_requests.session_id,
-    #                     }
-    #                 ).stream(chat_requests.message))
-    #     return chunks['answer']
+    
+    def chat_retrieval(self, chat_requests: ChatRequest):
+        chain = self.chain_manager.get_chain(chat_requests.conversation_type)
+        chunks = (chain.with_config(
+                        configurable={
+                            "llm": chat_requests.llm,
+                            "prompt": chat_requests.conversation_type,
+                            "retrieval": "sample_01",
+                            "session_id": chat_requests.session_id,
+                        }
+                    ).stream(chat_requests.message))
+        for chunk in chunks:
+            print(chunk)
+            if 'answer' in chunk:
+                yield chunk['answer']
+            else:
+                pass
