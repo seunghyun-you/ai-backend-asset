@@ -2,6 +2,16 @@ from langchain.prompts import PromptTemplate
 
 from langchain_core.runnables import ConfigurableField
 
+def chat_simple_template(template=True) -> any:
+    prompt = """ 
+    1. 다음에 전달되는 사용자의 질문을 보고 핵심을 잘 나타내는 제목을 뽑아서 답변해주세요.
+    2. 부가 설명없이 제목만 출력해주세요.
+    3. 제목은 30글자 내외로 작성해야 합니다.
+    {input}
+    """
+
+    return PromptTemplate.from_template(template=prompt) if template else prompt
+
 def chat_memory_template(template=True) -> any:
     prompt = """ 
     ###Instruction
@@ -98,5 +108,6 @@ def get_configurable_template() -> any:
     return prompt_template.configurable_alternatives(
         ConfigurableField(id="prompt"),
         default_key="general",
+        simple=chat_simple_template(),
         retrieval=chat_retrieval_template()
     )

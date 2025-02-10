@@ -37,7 +37,7 @@ def get_user(userid: str):
     
     try:
         return User(
-            userid=user_information.userid,
+            user_id=user_information.userid,
             username=user_information.username,
             email=user_information.email,
             hashed_password=user_information.hashed_password

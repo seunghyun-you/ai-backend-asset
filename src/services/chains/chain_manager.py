@@ -19,6 +19,13 @@ def get_session_history(session_id: str) -> BaseChatMessageHistory:
         store[session_id] = InMemoryHistory(max_messages=5)
     return store[session_id]
 
+def simple_chain(chain):
+    return RunnableParallel(
+        {
+            "input": RunnablePassthrough()
+        }
+    ).assign(answer=chain)
+
 def memory_chain(chain):
     message_history_chain = RunnableWithMessageHistory(
         chain,
@@ -50,6 +57,7 @@ def retrieval_chain(chain):
     ).assign(answer=message_history_chain)
 
 chain_dictionary = {
+    "simple": simple_chain,
     "general": memory_chain,
     "retrieval": retrieval_chain,
 }
@@ -72,6 +80,7 @@ class ChainManager:
         return cls._instance
     
     def __init__(self):
+        self.chains['simple'] = create_chain(chain_type='simple')
         self.chains['general'] = create_chain(chain_type='general')
         self.chains['retrieval'] = create_chain(chain_type='retrieval')
     

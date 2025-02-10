@@ -1,4 +1,4 @@
-from typing import Optional
+# from typing import Optional
 from pydantic import BaseModel, validator
 
 LLM_TYPE_KEYS = {
@@ -8,22 +8,15 @@ LLM_TYPE_KEYS = {
     'Claude V3.5 Sonnet': 'sonnet35'
 }
 
-class MultiTurn(BaseModel):
-    brand_name: str
-    model_name: str
-    error_code: Optional[str] = None
-    input_query: Optional[str] = None
-    parts_name: Optional[str] = None
-
 class ChatRequest(BaseModel):
     llm: str
     message: str
-    message_id: str
-    session_id: str
-    connection_id: str
     conversation_type: str
-    knowledge_type: str = None
-    multi_turn: Optional[MultiTurn] = None
+    user_id: str
+    session_id: str
+    message_id: int
+    chat_room_id: str
+    # chat_room_exist: bool
 
     @validator("llm", pre=True, always=True)
     def set_model(cls, v):

@@ -21,10 +21,10 @@ async def login(credentials: OAuth2PasswordRequestForm = Depends()):
 
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = authenticate_service.create_access_token(
-        token_data={"sub": user_information.userid, "username": user_information.username}, 
+        token_data={"sub": user_information.user_id, "username": user_information.username}, 
         expires_delta=access_token_expires
     )
-    return {"access_token": access_token, "token_type": "bearer"}
+    return {"access_token": access_token, "user_id": user_information.user_id, "token_type": "bearer"}
 
 
 # Frontend <PRIVATEROUTE> 접근할 때마다 TOKEN 인증을 위한 함수
