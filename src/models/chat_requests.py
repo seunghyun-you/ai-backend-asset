@@ -2,10 +2,13 @@
 from pydantic import BaseModel, validator
 
 LLM_TYPE_KEYS = {
-    'Claude v3 Haiku': 'haiku',
+    'Claude V3 Haiku': 'haiku',
     'Claude V3 Opus': 'opus',
     'Claude V3 Sonnet': 'sonnet3',
-    'Claude V3.5 Sonnet': 'sonnet35'
+    'Claude V3.5 Haiku': 'haiku35',
+    'Claude V3.5 Sonnet': 'sonnet35',
+    'Claude V3.5 V2 Sonnet': 'sonnet35v2',
+    'Claude V3.7 Sonnet': 'sonnet37'
 }
 
 class ChatRequest(BaseModel):
@@ -20,4 +23,4 @@ class ChatRequest(BaseModel):
 
     @validator("llm", pre=True, always=True)
     def set_model(cls, v):
-        return LLM_TYPE_KEYS.get(v, 'haiku')
+        return LLM_TYPE_KEYS.get(v, 'haiku35')

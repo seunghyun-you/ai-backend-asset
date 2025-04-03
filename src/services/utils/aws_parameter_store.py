@@ -1,6 +1,6 @@
 import boto3
 
-ssm = boto3.client('ssm')
+ssm = boto3.client('ssm', 'ap-northeast-2')
 
 def get_admin_user_information(parameter_path):
     parameters = {}

@@ -3,6 +3,7 @@ import boto3
 from collections import OrderedDict
 
 from langchain_aws import ChatBedrock
+from langchain_aws import ChatBedrockConverse
 from langchain_core.runnables import ConfigurableField
 
 def get_bedrock_client():
@@ -15,15 +16,6 @@ def get_bedrock_client():
 
 def get_bedrock_models_Information(model=None, temperature=0.0, topP=0.9, max_tokens=8000):
     claude_model_kwargs = {
-        "max_tokens": max_tokens,
-        "stop_sequences": ["\\n\\nHuman:", "\\nHuman:", "Human:"],
-        "temperature": temperature,
-        "top_k": 100,
-        "top_p": topP,
-        "anthropic_version": "bedrock-2023-05-31"
-    }
-
-    claude_v3_model_kwargs = {
         "max_tokens": max_tokens,
         "stop_sequences": ["\\n\\nHuman:", "\\nHuman:", "Human:"],
         "temperature": temperature,
@@ -63,7 +55,10 @@ def get_bedrock_models_Information(model=None, temperature=0.0, topP=0.9, max_to
     anthropic_claude_v3_sonnet_model_id = "anthropic.claude-3-sonnet-20240229-v1:0"
     anthropic_claude_v3_haiku_model_id = "anthropic.claude-3-haiku-20240307-v1:0"
     anthropic_claude_v3_opus_model_id = "anthropic.claude-3-opus-20240229-v1:0"
+    anthropic_claude_v3_5_haiku_model_id = "anthropic.claude-3-5-haiku-20241022-v1:0"
     anthropic_claude_v3_5_sonnet_model_id = "anthropic.claude-3-5-sonnet-20240620-v1:0"
+    anthropic_claude_v3_5_v2_sonnet_model_id = "anthropic.claude-3-5-sonnet-20241022-v2:0"
+    anthropic_claude_v3_7_sonnet_model_id = "us.anthropic.claude-3-7-sonnet-20250219-v1:0"
     mistral_mixtral_8_7_model_id = "mistral.mixtral-8x7b-instruct-v0:1"
 
     amazon_titan_tg1_large_model = (amazon_titan_tg1_large_model_id, titan_model_kwargs)
@@ -73,10 +68,13 @@ def get_bedrock_models_Information(model=None, temperature=0.0, topP=0.9, max_to
     anthropic_claude_v1 = (anthropic_claude_v1_model_id, claude_model_kwargs)
     anthropic_claude_v2 = (anthropic_claude_v2_model_id, claude_model_kwargs)
     anthropic_claude_v2_1 = (anthropic_claude_v2_1_model_id, claude_model_kwargs)
-    anthropic_claude_v3_sonnet = (anthropic_claude_v3_sonnet_model_id, claude_v3_model_kwargs)
-    anthropic_claude_v3_haiku = (anthropic_claude_v3_haiku_model_id, claude_v3_model_kwargs)
-    anthropic_claude_v3_opus = (anthropic_claude_v3_opus_model_id, claude_v3_model_kwargs)
-    anthropic_claude_v3_5_sonnet = (anthropic_claude_v3_5_sonnet_model_id, claude_v3_model_kwargs)
+    anthropic_claude_v3_sonnet = (anthropic_claude_v3_sonnet_model_id, claude_model_kwargs)
+    anthropic_claude_v3_haiku = (anthropic_claude_v3_haiku_model_id, claude_model_kwargs)
+    anthropic_claude_v3_opus = (anthropic_claude_v3_opus_model_id, claude_model_kwargs)
+    anthropic_claude_v3_5_haiku = (anthropic_claude_v3_5_haiku_model_id, claude_model_kwargs)
+    anthropic_claude_v3_5_sonnet = (anthropic_claude_v3_5_sonnet_model_id, claude_model_kwargs)
+    anthropic_claude_v3_5_v2_sonnet = (anthropic_claude_v3_5_v2_sonnet_model_id, claude_model_kwargs)
+    anthropic_claude_v3_7_sonnet = (anthropic_claude_v3_7_sonnet_model_id, claude_model_kwargs)
     mistral_mixtral_8_7 = (mistral_mixtral_8_7_model_id, mixtral_8_7_model_kwargs)
 
     models = OrderedDict({'AI21 Jurrasic-2 Mid': ai21_j2_mid,
@@ -89,7 +87,10 @@ def get_bedrock_models_Information(model=None, temperature=0.0, topP=0.9, max_to
                           'Anthropic Claude v3 Sonnet': anthropic_claude_v3_sonnet,
                           'Anthropic Claude v3 Haiku': anthropic_claude_v3_haiku,
                           'Anthropic Claude v3 Opus': anthropic_claude_v3_opus,
+                          'Anthropic Claude v3.5 Haiku': anthropic_claude_v3_5_haiku,
                           'Anthropic Claude v3.5 Sonnet': anthropic_claude_v3_5_sonnet,
+                          'Anthropic Claude v3.5 v2 Sonnet': anthropic_claude_v3_5_v2_sonnet,
+                          'Anthropic Claude v3.7 Sonnet': anthropic_claude_v3_7_sonnet,
                           'Mistral Mixtral 8x7 Instruct': mistral_mixtral_8_7
                           })
 
@@ -111,6 +112,19 @@ def get_bedrock_model(model_name='Anthropic Claude v3 Haiku', model_params=None)
         model_kwargs=model_params,
     )
 
+def get_bedrock_converse_model(model_name='Anthropic Claude v3.7 Sonnet', model_params=None) -> ChatBedrock:
+    model_info = get_bedrock_models_Information(model_name)
+
+    model_id = model_info[0]
+    model_params = model_params if model_params is not None else model_info[1]
+    bedrock_client = get_bedrock_client()
+
+    return ChatBedrockConverse(
+        client=bedrock_client,
+        model_id=model_id,
+        model_kwargs=model_params,
+    )
+
 def get_configurable_llm():
     haiku = get_bedrock_model(model_name='Anthropic Claude v3 Haiku', model_params=None)
 
@@ -119,5 +133,8 @@ def get_configurable_llm():
         default_key='haiku',
         opus=get_bedrock_model(model_name='Anthropic Claude v3 Opus', model_params=None),
         sonnet=get_bedrock_model(model_name='Anthropic Claude v3 Sonnet', model_params=None),
-        sonnet35=get_bedrock_model(model_name='Anthropic Claude v3.5 Sonnet', model_params=None)
+        haiku35=get_bedrock_model(model_name='Anthropic Claude v3.5 Haiku', model_params=None),
+        sonnet35=get_bedrock_model(model_name='Anthropic Claude v3.5 Sonnet', model_params=None),
+        sonnet35v2=get_bedrock_model(model_name='Anthropic Claude v3.5 v2 Sonnet', model_params=None),
+        # sonnet37=get_bedrock_converse_model(model_name='Anthropic Claude v3.7 Sonnet', model_params=None)
     )
